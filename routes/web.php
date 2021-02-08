@@ -17,6 +17,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('app/get_tag','AdminController@getTag')->middleware('cors');
+Route::post('app/create_tag','AdminController@addTag')->middleware('cors');
 Route::get('/new','TestController@controllerMethod');
 
 Route::any('/{slug}',function(){
