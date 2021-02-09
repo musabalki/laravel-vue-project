@@ -17,8 +17,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::put('app/edit_tag','AdminController@editTag')->middleware('cors');
 Route::get('app/get_tag','AdminController@getTag')->middleware('cors');
 Route::post('app/create_tag','AdminController@addTag')->middleware('cors');
+Route::post('app/delete_tag','AdminController@deleteTag')->middleware('cors');
+
 Route::get('/new','TestController@controllerMethod');
 
 Route::any('/{slug}',function(){
