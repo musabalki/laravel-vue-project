@@ -2208,6 +2208,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       },
       index: -1,
       showDeleteModalResult: false,
+      isDeleting: false,
       deleteItem: {},
       deleteIndex: -1
     };
@@ -2328,10 +2329,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _context3.next = 2;
+                /* if(!confirm('Are you sure you want to delete this tags ?')){
+                   return
+                  // 
+                 }*/
+                //tag.isDeleting=true
+                //this.$set(tag,'isDeleting',true)
+                _this3.isDeleting = true;
+                _context3.next = 3;
                 return _this3.callApi('post', 'app/delete_tag', _this3.deleteItem);
 
-              case 2:
+              case 3:
                 res = _context3.sent;
 
                 if (res.status === 200) {
@@ -2344,7 +2352,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this3.swr();
                 }
 
-              case 4:
+                _this3.isDeleting = false;
+                _this3.showDeleteModalResult = false;
+
+              case 7:
               case "end":
                 return _context3.stop();
             }
@@ -68373,7 +68384,8 @@ var render = function() {
                         type: "error",
                         size: "large",
                         long: "",
-                        disabled: _vm.showDeleteModalResult
+                        disabled: _vm.isDeleting,
+                        loading: _vm.isDeleting
                       },
                       on: { click: _vm.deleteTag }
                     },

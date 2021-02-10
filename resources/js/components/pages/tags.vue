@@ -84,7 +84,7 @@
             <p>Will you delete it?</p>
         </div>
         <div slot="footer">
-            <Button type="error" size="large" long :disabled="showDeleteModalResult"   @click="deleteTag" >Delete</Button>
+            <Button type="error" size="large" long :disabled="isDeleting"  :loading="isDeleting"  @click="deleteTag" >Delete</Button>
         </div>
     </Modal>
       </div>
@@ -107,6 +107,7 @@ export default {
       },
       index:-1,
       showDeleteModalResult:false,
+      isDeleting:false,
       deleteItem:{},
       deleteIndex:-1
       
@@ -171,6 +172,7 @@ export default {
       }*/
       //tag.isDeleting=true
       //this.$set(tag,'isDeleting',true)
+      this.isDeleting=true
       const res = await this.callApi('post','app/delete_tag',this.deleteItem)
       if(res.status===200){
           this.tags.splice(this.i,1)
@@ -180,6 +182,8 @@ export default {
       else{
         this.swr()
       }
+      this.isDeleting=false
+      this.showDeleteModalResult=false
     },
     showDeleteModal(tag,i2){
       this.deleteItem=tag;
