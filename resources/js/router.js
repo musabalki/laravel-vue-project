@@ -8,7 +8,7 @@ import hooks from "./components/pages/basic/hooks"
 import methods from "./components/pages/basic/methods"
 
 import home from "./components/pages/home"
-import tags from "./components/pages/tags"
+import tags from "./admin/pages/tags"
 const routes=[
     {
         path:'/',
