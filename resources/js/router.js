@@ -9,6 +9,8 @@ import methods from "./components/pages/basic/methods"
 
 import home from "./components/pages/home"
 import tags from "./admin/pages/tags"
+import category from "./admin/pages/category"
+
 const routes=[
     {
         path:'/',
@@ -17,6 +19,10 @@ const routes=[
     {
         path:'/tags',
         component:tags
+    },
+    {
+        path:'/category',
+        component:category
     },
 
 

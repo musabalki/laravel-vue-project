@@ -26,4 +26,9 @@ class AdminController extends Controller
         $this->validate($request,['tagName'=>'required']);
         return Tag::where('id',$request->id)->delete();
     }
-}
+    public function upload(Request $request){
+       return $pName=time().'.'.$request->file->extension();
+       $request->file->move(public_path('uploads'),$pName);
+       return $pName;
+    }
+}  

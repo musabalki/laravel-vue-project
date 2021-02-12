@@ -6,6 +6,13 @@
         <title>Laravel</title>
         <link rel="stylesheet" href="/css/all.css">
         <link rel="stylesheet" href="/css/grid.min.css">
+        <script>
+            (function(){
+                window.Laravel={
+                    csrfToken:'{{csrf_token()}}'
+                }
+            })();
+        </script>
     </head>
     <body>
         <div id="app">
