@@ -55,7 +55,17 @@
         >
           <Input name="tagName" type="text" v-model="data.tagName" />
           <div class="space">
-            <Upload multiple type="drag" :headers="{'x-csrf-token':token}" action="/app/upload">
+            <Upload
+              :on-success="handleSuccess"
+              :max-size="2048"
+              :on-format-error="handleFormatError"
+              :on-exceeded-size="handleMaxSize"
+              :format="['jpg', 'jpeg', 'png']"
+              multiple
+              type="drag"
+              :headers="{ 'x-csrf-token': token }"
+              action="/app/upload"
+            >
               <div style="padding: 20px 0">
                 <Icon type="ios-cloud-upload" size="52" style="color: #3399ff">
                 </Icon>
@@ -125,7 +135,8 @@ export default {
   data() {
     return {
       data: {
-        tagName: "",
+        iconImage: "",
+        categoryName:""
       },
       tags: [],
       addModal: false,
@@ -139,7 +150,7 @@ export default {
       isDeleting: false,
       deleteItem: {},
       deleteIndex: -1,
-      token:''
+      token: "",
     };
   },
   methods: {
@@ -218,10 +229,28 @@ export default {
       this.deleteIndex = i2;
       this.showDeleteModalResult = true;
     },
+    handleSuccess(res, file) {
+      this.data.iconImage=res
+    },
+    handleFormatError(file) {
+      this.$Notice.warning({
+        title: "The file format is incorrect",
+        desc:
+          "File format of " +
+          file.name +
+          " is incorrect, please select jpg or png.",
+      });
+    },
+    handleMaxSize(file) {
+      this.$Notice.warning({
+        title: "Exceeding file size limit",
+        desc: "File  " + file.name + " is too large, no more than 2M.",
+      });
+    },
   },
   async created() {
     const res = await this.callApi("get", "app/get_tag");
-    this.token=window.Laravel.csrfToken;
+    this.token = window.Laravel.csrfToken;
     if (res.status === 200) {
       this.tags = res.data;
     } else {

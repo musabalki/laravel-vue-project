@@ -2050,11 +2050,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       data: {
-        tagName: ""
+        iconImage: "",
+        categoryName: ""
       },
       tags: [],
       addModal: false,
@@ -2068,7 +2079,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       isDeleting: false,
       deleteItem: {},
       deleteIndex: -1,
-      token: ''
+      token: ""
     };
   },
   methods: {
@@ -2225,6 +2236,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.deleteItem = tag;
       this.deleteIndex = i2;
       this.showDeleteModalResult = true;
+    },
+    handleSuccess: function handleSuccess(res, file) {
+      this.data.iconImage = res;
+    },
+    handleFormatError: function handleFormatError(file) {
+      this.$Notice.warning({
+        title: "The file format is incorrect",
+        desc: "File format of " + file.name + " is incorrect, please select jpg or png."
+      });
+    },
+    handleMaxSize: function handleMaxSize(file) {
+      this.$Notice.warning({
+        title: "Exceeding file size limit",
+        desc: "File  " + file.name + " is too large, no more than 2M."
+      });
     }
   },
   created: function created() {
@@ -67832,6 +67858,11 @@ var render = function() {
                     "Upload",
                     {
                       attrs: {
+                        "on-success": _vm.handleSuccess,
+                        "max-size": 2048,
+                        "on-format-error": _vm.handleFormatError,
+                        "on-exceeded-size": _vm.handleMaxSize,
+                        format: ["jpg", "jpeg", "png"],
                         multiple: "",
                         type: "drag",
                         headers: { "x-csrf-token": _vm.token },
