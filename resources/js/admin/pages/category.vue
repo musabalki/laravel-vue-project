@@ -57,13 +57,17 @@
           <div class="space">
             <Upload
               :on-success="handleSuccess"
+              :on-error="handleError"
               :max-size="2048"
               :on-format-error="handleFormatError"
               :on-exceeded-size="handleMaxSize"
               :format="['jpg', 'jpeg', 'png']"
               multiple
               type="drag"
-              :headers="{ 'x-csrf-token': token }"
+              :headers="{
+                'x-csrf-token': token,
+                'X-Requested-With': 'XMLHttpRequest',
+              }"
               action="/app/upload"
             >
               <div style="padding: 20px 0">
@@ -72,6 +76,9 @@
                 <p>Click or drag files here to upload</p>
               </div>
             </Upload>
+            <div class="image_thumb" v-if="data.iconImage">
+              <img :src="`/uploads/${data.iconImage}`" alt="">
+            </div>
           </div>
           <div slot="footer">
             <Button type="default" @click="addModal = false">Close</Button>
@@ -136,7 +143,7 @@ export default {
     return {
       data: {
         iconImage: "",
-        categoryName:""
+        categoryName: "",
       },
       tags: [],
       addModal: false,
@@ -230,7 +237,13 @@ export default {
       this.showDeleteModalResult = true;
     },
     handleSuccess(res, file) {
-      this.data.iconImage=res
+      this.data.iconImage = res;
+    },
+    handleError() {
+      this.$Notice.warning({
+        title: "The file format is incorrect",
+        desc: `${file.errors.file.length ? file.errors.file[0]:'something went wrong'}`,
+      });
     },
     handleFormatError(file) {
       this.$Notice.warning({

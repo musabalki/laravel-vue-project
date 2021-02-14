@@ -2060,6 +2060,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2239,6 +2246,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     handleSuccess: function handleSuccess(res, file) {
       this.data.iconImage = res;
+    },
+    handleError: function handleError() {
+      this.$Notice.warning({
+        title: "The file format is incorrect",
+        desc: "".concat(file.errors.file.length ? file.errors.file[0] : 'something went wrong')
+      });
     },
     handleFormatError: function handleFormatError(file) {
       this.$Notice.warning({
@@ -67859,13 +67872,17 @@ var render = function() {
                     {
                       attrs: {
                         "on-success": _vm.handleSuccess,
+                        "on-error": _vm.handleError,
                         "max-size": 2048,
                         "on-format-error": _vm.handleFormatError,
                         "on-exceeded-size": _vm.handleMaxSize,
                         format: ["jpg", "jpeg", "png"],
                         multiple: "",
                         type: "drag",
-                        headers: { "x-csrf-token": _vm.token },
+                        headers: {
+                          "x-csrf-token": _vm.token,
+                          "X-Requested-With": "XMLHttpRequest"
+                        },
                         action: "/app/upload"
                       }
                     },
@@ -67886,7 +67903,18 @@ var render = function() {
                         1
                       )
                     ]
-                  )
+                  ),
+                  _vm._v(" "),
+                  _vm.data.iconImage
+                    ? _c("div", { staticClass: "image_thumb" }, [
+                        _c("img", {
+                          attrs: {
+                            src: "/uploads/" + _vm.data.iconImage,
+                            alt: ""
+                          }
+                        })
+                      ])
+                    : _vm._e()
                 ],
                 1
               ),
