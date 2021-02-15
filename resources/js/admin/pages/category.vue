@@ -55,7 +55,8 @@
         >
           <Input name="tagName" type="text" v-model="data.tagName" />
           <div class="space">
-            <Upload
+            <Upload 
+             ref="uploads"
               :on-success="handleSuccess"
               :on-error="handleError"
               :max-size="2048"
@@ -77,7 +78,9 @@
               </div>
             </Upload>
             <div class="image_thumb" v-if="data.iconImage">
-              <img :src="`/uploads/${data.iconImage}`" alt="">
+              <Icon @click="deleteImage" type="ios-cloud-upload" size="52" style="color:#3399ff">
+              </Icon>
+              <p>Click or drag files here upload </p>
             </div>
           </div>
           <div slot="footer">
@@ -260,6 +263,16 @@ export default {
         desc: "File  " + file.name + " is too large, no more than 2M.",
       });
     },
+    async deleteImage(){
+      let image=this.data.iconImage
+      this.data.iconImage=""
+      this.$refs.upload.clearFiles()
+      const res = await this.callApi('post','app/delete_image',{imageName:image})
+      if(res.status!=200){
+        this.data.iconImage=image
+        this.swr()
+      }
+    }
   },
   async created() {
     const res = await this.callApi("get", "app/get_tag");
