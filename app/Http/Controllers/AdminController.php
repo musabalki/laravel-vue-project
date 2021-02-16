@@ -53,4 +53,8 @@ class AdminController extends Controller
             }
             return;
     }
+    public function addCategory(Request $request){
+        $this->validate($request,['categoryname'=>'required','iconImage'=>'required']);
+        return Category::create(['categoryName'=>$request->categoryName,'iconImage'=>$request->iconImage]);
+    }
 }
