@@ -87,7 +87,7 @@
             <Button type="default" @click="addModal = false">Close</Button>
             <Button
               type="primary"
-              @click="addTag"
+              @click="addCategory"
               :disabled="isAdding"
               :loading="isAdding"
               >{{ isAdding ? "Adding..." : "Add" }}</Button
@@ -164,21 +164,26 @@ export default {
     };
   },
   methods: {
-    async addTag() {
-      if (this.data.tagName.trim() == "") {
-        return this.e("Tag name is required");
+    async addCategory() {
+      alert("aaaaa")
+       if (this.data.categoryName.trim() == "") {
+        return this.e("Category name is required");
       }
-      const res = await this.callApi("post", "app/create_tag", this.data);
+      if (this.data.iconName.trim() == "") {
+        return this.e("İcon is required");
+      }
+      const res = await this.callApi("post", "app/create_category", this.data);
       console.log(res);
       if (res.status === 201) {
         this.tags.unshift(res.data);
         this.s("Success");
         this.addModal = false;
-        this.data.tagName = "";
+        this.data.categoryName = "";
+        this.data.iconName = "";
       } else {
         if (res.status == 422) {
-          if (res.data.errors.tagName) {
-            this.e(res.data.errors.tagName[0]);
+          if (res.data.errors.category) {
+            this.e(res.data.errors.categoryName[0]);
           }
         } else {
           this.swr();
@@ -266,7 +271,7 @@ export default {
     async deleteImage(){
       let image=this.data.iconImage
       this.data.iconImage=""
-      this.$refs.upload.clearFiles()
+      this.$refs.uploads.clearFiles()
       const res = await this.callApi('post','app/delete_image',{imageName:image})
       if(res.status!=200){
         this.data.iconImage=image
