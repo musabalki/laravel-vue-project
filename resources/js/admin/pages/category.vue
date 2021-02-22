@@ -18,28 +18,32 @@
               <!-- TABLE TITLE -->
               <tr>
                 <th>ID</th>
-                <th>Tag Name</th>
+                <th>Icon Name</th>
+                <th>Category Name</th>
                 <th>Created At</th>
                 <th>Action</th>
               </tr>
               <!-- TABLE TITLE -->
               <!-- ITEMS -->
-              <tr v-for="(tag, i2) in tags" :key="tag.id">
-                <td>{{ tag.id }}</td>
-                <td class="_table_name">{{ tag.tagName }}</td>
-                <td>{{ tag.created_at }}</td>
+              <tr v-for="(category, i2) in categoryList" :key="category.id">
+                <td>{{ category.id }}</td>
+                <td >
+                  <img :src="category.iconImage" alt="icon">
+                </td>
+                <td>{{ category.categoryName}}</td>
+                <td>{{ category.created_at }}</td>
                 <td>
                   <Button
                     type="info"
                     size="small"
-                    @click="showEditModal(tag, i2)"
+                    @click="showEditModal(category, i2)"
                     >Edit</Button
                   >
                   <Button
                     type="error"
                     size="small"
-                    :loading="tag.isDeleting"
-                    @click="showDeleteModal(tag, i2)"
+                    :loading="category.isDeleting"
+                    @click="showDeleteModal(category, i2)"
                     >Delete</Button
                   >
                 </td>
@@ -53,7 +57,7 @@
           :mask-closable="false"
           :closable="true"
         >
-          <Input name="tagName" type="text" v-model="data.tagName" />
+          <Input name="categoryName" type="text" v-model="data.categoryName" />
           <div class="space">
             <Upload 
              ref="uploads"
@@ -148,7 +152,7 @@ export default {
         iconImage: "",
         categoryName: "",
       },
-      tags: [],
+      categoryList: [],
       addModal: false,
       editModal: false,
       isAdding: false,
@@ -165,21 +169,22 @@ export default {
   },
   methods: {
     async addCategory() {
-      alert("aaaaa")
+      
        if (this.data.categoryName.trim() == "") {
         return this.e("Category name is required");
       }
-      if (this.data.iconName.trim() == "") {
+      if (this.data.iconImage.trim() == "") {
         return this.e("İcon is required");
       }
+      this.data.iconImage=`/uploads/${this.data.iconImage}`
       const res = await this.callApi("post", "app/create_category", this.data);
       console.log(res);
       if (res.status === 201) {
-        this.tags.unshift(res.data);
+        this.categoryList.unshift(res.data);
         this.s("Success");
         this.addModal = false;
         this.data.categoryName = "";
-        this.data.iconName = "";
+        this.data.iconImage = "";
       } else {
         if (res.status == 422) {
           if (res.data.errors.category) {
@@ -191,20 +196,20 @@ export default {
       }
     },
     async editTag() {
-      if (this.editData.tagName.trim() == "") {
+      if (this.editData.categoryName.trim() == "") {
         return this.e("Tag name is required");
       }
       const res = await this.callApi("put", "app/edit_tag", this.editData);
       //console.log(res);
       if (res.status === 200) {
-        this.tags[this.index].tagName = this.editData.tagName;
+        this.categoryList[this.index].categoryName = this.editData.categoryName;
         //this.tags.unshift(res.data);
         this.s("Tag has been edited successfully");
         this.editModal = false;
       } else {
         if (res.status == 422) {
-          if (res.data.errors.tagName) {
-            this.e(res.data.errors.tagName[0]);
+          if (res.data.errors.categoryName) {
+            this.e(res.data.errors.categoryName[0]);
           }
         } else {
           this.swr();
@@ -280,13 +285,14 @@ export default {
     }
   },
   async created() {
-    const res = await this.callApi("get", "app/get_tag");
+    const res = await this.callApi("get", "app/get_category");
     this.token = window.Laravel.csrfToken;
     if (res.status === 200) {
-      this.tags = res.data;
+      this.categoryList = res.data;
     } else {
       this.swr();
     }
+    console.log(res)
   },
 };
 </script>
