@@ -100,16 +100,44 @@
         </Modal>
         <Modal
           v-model="editModal"
-          title="Edit tag"
+          title="Edit Category"
           :mask-closable="false"
           :closable="true"
         >
-          <Input v-model="editData.tagName" type="text" />
+          <Input name="categoryName" type="text" v-model="data.categoryName" />
+          <div class="space">
+            <Upload 
+             ref="uploads"
+              :on-success="handleSuccess"
+              :on-error="handleError"
+              :max-size="2048"
+              :on-format-error="handleFormatError"
+              :on-exceeded-size="handleMaxSize"
+              :format="['jpg', 'jpeg', 'png']"
+              multiple
+              type="drag"
+              :headers="{
+                'x-csrf-token': token,
+                'X-Requested-With': 'XMLHttpRequest',
+              }"
+              action="/app/upload"
+            >
+              <div style="padding: 20px 0">
+                <Icon type="ios-cloud-upload" size="52" style="color: #3399ff">
+                </Icon>
+                <p>Click or drag files here to upload</p>
+              </div>
+            </Upload>
+            <div class="demo-upload-list" v-if="editData.iconImage">
+              <img :src="`/${editData.iconImage}`" />
+              <p>Click or drag files here upload </p>
+            </div>
+          </div>
           <div slot="footer">
             <Button type="default" @click="editModal = false">Close</Button>
             <Button
               type="primary"
-              @click="editTag"
+              @click="editCategory"
               :disabled="isAdding"
               :loading="isAdding"
               >{{ isAdding ? "Editing..." : "Edit tag" }}</Button
@@ -158,6 +186,7 @@ export default {
       isAdding: false,
       editData: {
         tagName: "",
+        categoryName:""
       },
       index: -1,
       showDeleteModalResult: false,
@@ -195,7 +224,7 @@ export default {
         }
       }
     },
-    async editTag() {
+    async editCategory() {
       if (this.editData.categoryName.trim() == "") {
         return this.e("Tag name is required");
       }
@@ -216,12 +245,12 @@ export default {
         }
       }
     },
-    showEditModal(tag, index) {
-      let obj = {
+    showEditModal(category, index) {
+     /* let obj = {
         id: tag.id,
         tagName: tag.tagName,
-      };
-      this.editData = obj;
+      };*/
+      //this.editData = obj;
       this.editModal = true;
       this.index = index;
     },
