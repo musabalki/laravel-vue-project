@@ -1,1 +1,1 @@
-## Laravel - Vuejs ile proje
+## Laravel - Vuejs ile admin paneli
